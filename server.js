@@ -110,6 +110,17 @@ app.get('/debug-columns', async (req, res) => {
   }
 });
 
+pool.query(`
+  CREATE TABLE IF NOT EXISTS questions (
+    id SERIAL PRIMARY KEY,
+    question TEXT,
+    response TEXT,
+    created_at TIMESTAMP DEFAULT NOW()
+  );
+`)
+.then(() => console.log('Table ensured ✅'))
+.catch(err => console.error('Table creation error:', err));
+
 app.listen(3000, () => {
   console.log('Server running on port 3000');
 });
