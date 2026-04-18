@@ -60,19 +60,21 @@ ${question}
 
     const response = aiResponse.output_text || 'No AI response returned.';
 
-    await pool.query(`
-      CREATE TABLE IF NOT EXISTS questions (
-        id SERIAL PRIMARY KEY,
-        question TEXT,
-        response TEXT,
-        created_at TIMESTAMP DEFAULT NOW()
-      );
-    `);
+await pool.query(`
+  CREATE TABLE IF NOT EXISTS questions (
+    id SERIAL PRIMARY KEY,
+    question TEXT,
+    response TEXT,
+    created_at TIMESTAMP DEFAULT NOW()
+  );
+`);
 
-    const result = await pool.query(
-      'INSERT INTO questions (question, response, created_at) VALUES ($1, $2, NOW()) RETURNING *',
-      [question, response]
-    );
+await new Promise(resolve => setTimeout(resolve, 200)); // tiny delay to ensure table is ready
+
+const result = await pool.query(
+  'INSERT INTO questions (question, response, created_at) VALUES ($1, $2, NOW()) RETURNING *',
+  [question, response]
+);
 
     console.log('Inserted row:', result.rows[0]);
 
