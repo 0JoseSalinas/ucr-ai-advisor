@@ -90,6 +90,15 @@ const result = await pool.query(
 
 app.get('/questions', async (req, res) => {
   try {
+    await pool.query(`
+      CREATE TABLE IF NOT EXISTS questions (
+        id SERIAL PRIMARY KEY,
+        question TEXT,
+        response TEXT,
+        created_at TIMESTAMP DEFAULT NOW()
+      );
+    `);
+
     const result = await pool.query(
       'SELECT * FROM questions ORDER BY id DESC'
     );
