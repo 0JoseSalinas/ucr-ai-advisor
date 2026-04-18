@@ -60,6 +60,15 @@ ${question}
 
     const response = aiResponse.output_text || 'No AI response returned.';
 
+    await pool.query(`
+      CREATE TABLE IF NOT EXISTS questions (
+        id SERIAL PRIMARY KEY,
+        question TEXT,
+        response TEXT,
+        created_at TIMESTAMP DEFAULT NOW()
+      );
+    `);
+
     const result = await pool.query(
       'INSERT INTO questions (question, response, created_at) VALUES ($1, $2, NOW()) RETURNING *',
       [question, response]
@@ -76,10 +85,6 @@ ${question}
     res.status(500).json({ error: error.message || 'Something went wrong' });
   }
 });
-
-
-
-
 
 app.get('/questions', async (req, res) => {
   try {
@@ -110,19 +115,10 @@ app.get('/debug-columns', async (req, res) => {
   }
 });
 
-pool.query(`
-  CREATE TABLE IF NOT EXISTS questions (
-    id SERIAL PRIMARY KEY,
-    question TEXT,
-    response TEXT,
-    created_at TIMESTAMP DEFAULT NOW()
-  );
-`)
-.then(() => console.log('Table ensured ✅'))
-.catch(err => console.error('Table creation error:', err));
+const PORT = process.env.PORT || 3000;
 
-app.listen(3000, () => {
-  console.log('Server running on port 3000');
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
 });
 
 setInterval(() => {}, 1000);
