@@ -1,36 +1,39 @@
-<div class="container">
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>UCR AI App</title>
+  <title>UCRAIA</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
   <div class="container">
 
-<div class="banner">
-  <img src="/ucr.png" alt="UC Riverside campus banner">
-  <div class="banner-overlay">
-    <h1>UCR AI Advisor</h1>
-    <p>Ask academic questions and get AI-powered support</p>
-  </div>
-</div>
+    <div class="banner">
+      <img src="/ucr.png" alt="UC Riverside campus banner">
+      <div class="banner-overlay">
+        <h1>UCR AI Advisor</h1>
+        <p>Ask academic questions and get AI-powered support</p>
+      </div>
+    </div>
 
-    <h1>🎓 UCR HIGHLANDERS</h1>
-    <p>Ask a question you may have! (by Jose)</p>
+    <p class="prompt-text">Ask a question about classes, majors, or campus life.</p>
 
     <form id="questionForm">
       <textarea id="questionInput" placeholder="Type your question here..." required></textarea>
-      <button type="submit">Submit</button>
+      <button type="submit" id="submitBtn">Submit</button>
     </form>
 
-    <h2>Saved Questions</h2>
+    <div id="loading" class="loading hidden">
+      <div class="spinner"></div>
+      <p>Thinking...</p>
+    </div>
+
+    <h2>Recent Answers</h2>
     <div id="questionsList"></div>
+
   </div>
 
-  <script src="script.js"></script>
+  <script src="/script.js"></script>
 </body>
 </html>
-</div>

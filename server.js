@@ -10,13 +10,18 @@ const app = express();
 app.use(express.json());
 app.use(express.static('public'));
 
-const pool = new Pool({
-  user: 'postgres',
-  host: 'localhost',
-  database: 'ucr_ai_app',
-  password: 'adele2025',
-  port: 5432,
-});
+const pool = process.env.DATABASE_URL
+  ? new Pool({
+      connectionString: process.env.DATABASE_URL,
+      ssl: { rejectUnauthorized: false },
+    })
+  : new Pool({
+      user: 'postgres',
+      host: 'localhost',
+      database: 'ucr_ai_app',
+      password: 'adele2025',
+      port: 5432,
+    });
 
 app.get('/student', (req, res) => {
   res.json({
@@ -33,8 +38,8 @@ app.post('/question', async (req, res) => {
     console.log('Body:', req.body);
 
     const aiResponse = await openai.responses.create({
-  model: 'gpt-4.1-mini',
-  input: `
+      model: 'gpt-4.1-mini',
+      input: `
 You are UCR AI Advisor, an academic support assistant for UC Riverside students.
 
 Behavior rules:
@@ -49,7 +54,7 @@ Behavior rules:
 Answer this student question:
 ${question}
 `
-});
+    });
 
     console.log('AI RESPONSE OBJECT:', JSON.stringify(aiResponse, null, 2));
 
@@ -68,9 +73,13 @@ ${question}
     });
   } catch (error) {
     console.error('POST error:', error);
-    res.status(500).json({ error: 'Something went wrong' });
+    res.status(500).json({ error: error.message || 'Something went wrong' });
   }
 });
+
+
+
+
 
 app.get('/questions', async (req, res) => {
   try {
@@ -81,7 +90,7 @@ app.get('/questions', async (req, res) => {
     res.json(result.rows);
   } catch (error) {
     console.error('GET /questions error:', error);
-    res.status(500).json({ error: 'Something went wrong' });
+    res.status(500).json({ error: error.message || 'Something went wrong' });
   }
 });
 
